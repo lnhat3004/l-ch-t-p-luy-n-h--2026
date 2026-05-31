@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LNHAT - CHINH PHỤC HÈ 2026 (PHIÊN BẢN NÂNG CẤP CAO CẤP)</title>
+    <style>
+        /* ==========================================================================
+           1. CORE VARIABLES & THEME (CYBERPUNK GLASSMORPHISM - ĐỘ TƯƠNG PHẢN CAO)
+           ========================================================================== */
+        :root {
+            --bg-color: #060913;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(0, 242, 254, 0.25);
+            --text-main: #f8fafc;       /* Tăng độ sáng text chính lên sát trắng */
+            --text-sub: #cbd5e1;        /* Tăng độ tương phản text phụ (tốt hơn #8fa0b5 cũ) */
+            --text-muted: #94a3b8;      /* Tăng độ sáng text ghi chú */
+            --accent-cyan: #00f2fe;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --shadow-glow: 0 8px 32px 0 rgba(0, 242, 254, 0.15);
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at 50% 10%, #0f172a 0%, #060913 90%);
+            min-height: 100vh;
+            padding: 16px;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Tùy chỉnh thanh cuộn cao cấp */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           2. HEADER COMPONENT WITH INTEGRATED STATUS BADGE
+           ========================================================================== */
+        header {
+            text-align: center;
+            padding: 24px 16px;
+            margin-bottom: 24px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        #clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #digital-clock {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+            letter-spacing: 2px;
+        }
+
+        #current-date {
+            font-size: 13px;
+            color: var(--accent-cyan);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* Sửa lỗi che khuất trên Mobile - Tích hợp gọn vào Header */
+        .status-sync {
+            font-size: 11px;
+            color: var(--accent-yellow);
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-yellow);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==========================================================================
+           3. NAVIGATION CONTROLS PANEL (RESPONSIVE OPTIMIZED)
+           ========================================================================== */
+        .controls-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            margin-bottom: 24px;
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .week-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-sub);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .week-btn:hover {
+            border-color: var(--accent-cyan);
+            color: #fff;
+        }
+
+        .week-btn.active {
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            color: #fff;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .week-btn:active { transform: scale(0.96); }
+
+        .day-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .day-btn {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-sub);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        .day-btn small {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 2px;
+            text-transform: none;
+        }
+
+        .day-btn:hover {
+            border-color: var(--accent-cyan);
+            color: #fff;
+        }
+
+        .day-btn.active {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+        }
+
+        .day-btn:active { transform: scale(0.97); }
+
+        /* ==========================================================================
+           4. MAIN DASHBOARD GRID & TIMELINE LISTS
+           ========================================================================== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1.9fr 1.1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-glow);
+            height: fit-content;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 12px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .timeline { position: relative; }
+
+        .task-item {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .task-item.active-now {
+            border-left-color: var(--accent-yellow);
+            background: rgba(234, 179, 8, 0.06);
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.12);
+            transform: translateX(4px);
+        }
+
+        .task-item.completed {
+            border-left-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.03);
+            opacity: 0.65;
+        }
+
+        .task-time {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 18px;
+            font-family: var(--font-mono);
+            min-width: 85px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            margin-right: 16px;
+            padding-right: 12px;
+        }
+
+        .task-content { flex-grow: 1; padding-right: 12px; }
+        
+        .task-header-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .task-title-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .guide-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-study { background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 242, 254, 0.3); }
+        .tag-workout { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .tag-life { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+
+        .task-desc {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .task-desc b, .task-desc strong { color: #fff; font-weight: 600; }
+
+        .task-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+        }
+
+        /* Tối ưu hiệu ứng Checkbox mượt mà */
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            outline: none;
+        }
+
+        .custom-checkbox:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        .custom-checkbox:checked {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: var(--accent-green);
+            transform: scale(1.05);
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--accent-green);
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        /* ==========================================================================
+           5. SIDEBAR HANDBOOK CARDS
+           ========================================================================== */
+        .tip-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .tip-box h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tip-box p { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; }
+        .tip-box ul { margin-left: 18px; margin-top: 6px; font-size: 13px; color: var(--text-sub); }
+        .tip-box li { margin-bottom: 6px; line-height: 1.5; }
+
+        /* ==========================================================================
+           6. MODAL SYSTEM WITH HEIGHT LIMITATION & SCROLLABLE CONTENT
+           ========================================================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 6, 12, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: #0b1329;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh; /* Giới hạn chiều cao modal chống tràn trên mobile */
+            overflow-y: auto;  /* Thêm thanh cuộn dọc nội bộ */
+            padding: 24px;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.25);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-header {
+            color: var(--accent-cyan);
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .ai-question-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        #ai-q-text { font-size: 16px; color: #fff; margin-bottom: 8px; line-height: 1.5; font-weight: 600; }
+        #ai-q-hint { font-size: 12.5px; color: var(--accent-yellow); font-style: italic; }
+
+        .ai-input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: var(--font-mono);
+        }
+        .ai-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+
+        .modal-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ai-btn {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        .ai-btn:hover { box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
+        .ai-btn:active { transform: scale(0.97); }
+
+        /* Nút Hủy đóng modal được thiết kế chuyên nghiệp */
+        .ai-cancel-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ai-cancel-btn:hover { background: rgba(255, 33, 102, 0.15); color: #ff3366; border-color: #ff3366; }
+        .ai-cancel-btn:active { transform: scale(0.97); }
+
+        #ai-feedback { margin-top: 12px; font-weight: 700; min-height: 20px; text-align: center; font-size: 14px; }
+
+        /* ==========================================================================
+           7. ANTI-CHEAT HARD LOCK SCREEN (FULL SCREEN COVERAGE)
+           ========================================================================== */
+        #penalty-screen {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.98);
+            border: 4px solid var(--accent-red);
+            z-index: 2000;
+            color: white;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 24px;
+            backdrop-filter: blur(20px);
+        }
+        #penalty-screen h1 { font-size: 32px; color: var(--accent-red); margin-bottom: 16px; letter-spacing: 1px; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        #penalty-screen p { font-size: 16px; color: var(--text-sub); margin-bottom: 32px; max-width: 500px; line-height: 1.6; }
+        
+        .btn-punish {
+            padding: 14px 32px; font-size: 16px; background: transparent; color: white;
+            border: 2px solid var(--accent-green); cursor: pointer; border-radius: 8px;
+            font-weight: 700; transition: all 0.2s; text-transform: uppercase;
+        }
+        .btn-punish:hover { background: var(--accent-green); box-shadow: 0 0 20px rgba(34, 197, 148, 0.4); }
+        .btn-punish:active { transform: scale(0.96); }
+
+        /* ==========================================================================
+           8. RESPONSIVE MEDIA QUERIES FOR NATIVE SMARTPHONES
+           ========================================================================== */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            header { padding: 16px 10px; }
+            header h1 { font-size: 18px; }
+            #digital-clock { font-size: 28px; }
+            
+            .day-selector {
+                overflow-x: auto;
+                padding-bottom: 6px;
+                -webkit-overflow-scrolling: touch;
+            }
+            .day-btn {
+                min-width: 130px;
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            .task-time {
+                min-width: 70px;
+                font-size: 15px;
+                margin-right: 10px;
+                padding-right: 8px;
+            }
+            .task-item { padding: 12px; }
+            .task-desc { padding: 10px; font-size: 12.5px; }
+            .card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>DỰ ÁN HÈ 2026: KỶ LUẬT THÉP</h1>
+        <div id="clock-container">
+            <div id="digital-clock">00:00:00</div>
+            <div id="current-date">--/--/----</div>
+        </div>
+        <div class="status-sync" id="firebase-status">⚡ Hệ thống: Kết nối Firebase...</div>
+    </header>
+
+    <div class="controls-panel">
+        <div class="week-selector" id="week-selector"></div>
+        <div class="day-selector">
+            <button class="day-btn active" onclick="switchDay(this, '246')">Thứ 2-4-6<small>(Toán, Văn, Ngực/Tay)</small></button>
+            <button class="day-btn" onclick="switchDay(this, '357')">Thứ 3-5-7<small>(Tiếng Anh, Bụng/Chân)</small></button>
+            <button class="day-btn" onclick="switchDay(this, 'CN')">Chủ Nhật<small>(Tổng kết & Thể thao)</small></button>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="left-column">
+            <div class="card">
+                <div class="card-title">
+                    <span id="timeline-title">Lịch trình chi tiết</span>
+                    <span style="font-size: 13px; color: var(--accent-red); font-family: var(--font-mono); font-weight:700;" id="penalty-count">Mắc lỗi: 0/3</span>
+                </div>
+                <div class="timeline" id="timeline-container"></div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="card">
+                <div class="card-title">Cẩm Nang Phát Triển Hè</div>
+                
+                <div class="tip-box">
+                    <h4>💪 Tiêu Chuẩn Thể Hình & Chiều Cao</h4>
+                    <ul>
+                        <li><b>Mục tiêu cơ bụng:</b> Gập bụng (Crunch) kết hợp Plank chặt chẽ để kích nén cơ core lộ rõ nét múi.</li>
+                        <li><b>Cơ ngực & tay:</b> Hít đất chuẩn form (tay rộng bằng vai, hạ sát ngực xuống sàn), duy trì nhịp thở đều đặn.</li>
+                        <li><b>Tăng chiều cao:</b> Bắt buộc nhảy dây bằng mũi chân linh hoạt 500-1000 cái mỗi ngày kèm đu xà đơn giãn xương bả vai.</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <h4>✨ Quy Trình Skincare Da Trắng Sạch</h4>
+                    <ul>
+                        <li><b>Làm sạch sâu:</b> Rửa mặt bằng sữa rửa mặt Cetaphil/Cerave đúng 2 lần/ngày (sáng ngủ dậy và tối trước ngủ).</li>
+                        <li><b>Chống tia UV:</b> Thoa kem chống nắng phổ rộng SPF 50+ toàn diện trước khi rời khỏi nhà để bảo vệ nước da sáng khỏe.</li>
+                        <li><b>Thanh lọc:</b> Uống đủ từ 2 lít đến 2.5 lít nước tinh khiết mỗi ngày. Nghiêm cấm hoàn toàn đồ uống có ga.</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box" style="border-color: var(--accent-purple);">
+                    <h4>⚠️ Quy tắc vận hành hệ thống AI</h4>
+                    <p>Khi hoàn thành các Task học tập chuyên sâu, AI sẽ chọn ngẫu nhiên các câu hỏi bao quát 12 tuần. Trả lời sai dồn tích quá 3 lần, màn hình sẽ bị khóa cứng. Em bắt buộc phải hít đất 15 cái để hồi phục tư duy trước khi ấn nút mở khóa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="ai-modal">
+    <div class="modal-content">
+        <div class="ai-header">🤖 HỆ THỐNG AI KIỂM TRA</div>
+        <div class="ai-question-box">
+            <div id="ai-q-text">Đang kết xuất câu hỏi học tập...</div>
+            <div id="ai-q-hint">Gợi ý thuật toán: ...</div>
+        </div>
+        <input type="text" id="ai-input" class="ai-input" placeholder="Nhập đáp án chính xác của em..." autocomplete="off">
+        <div class="modal-btn-group">
+            <button class="ai-btn" onclick="verifyAnswer()">XÁC NHẬN ĐÁP ÁN</button>
+            <button class="ai-cancel-btn" onclick="closeAiModal()">ĐỂ SAU (HỦY THAO TÁC)</button>
+        </div>
+        <div id="ai-feedback"></div>
+    </div>
+</div>
+
+<div id="penalty-screen">
+    <h1>🔴 HỆ THỐNG ĐÃ BỊ KHÓA</h1>
+    <p>Em đã trả lời sai liên tiếp 3 lần câu hỏi kiểm tra bài cũ. Đây là dấu hiệu của việc học lơ là hoặc chưa tập trung cao độ.<br>Hãy dừng mọi thứ lại, nằm xuống sàn hít đất đúng 15 cái thật chuẩn để kích hoạt tuần hoàn máu não, sau đó quay lại chiến đấu tiếp!</p>
+    <button class="btn-punish" onclick="unlockSystem()">TÔI ĐÃ HÍT ĐẤT XONG - XIN MỞ KHÓA</button>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB35Yfa3FaJgUUH-kqMLk8EjuZPdy_SmT8",
+        authDomain: "lich-trinh-he-2026.firebaseapp.com",
+        databaseURL: "https://lich-trinh-he-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "lich-trinh-he-2026",
+        storageBucket: "lich-trinh-he-2026.firebasestorage.app",
+        messagingSenderId: "971645667436",
+        appId: "1:971645667436:web:f6d6d92448a93535417049",
+        measurementId: "G-KR5EWJ7TX3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    document.getElementById("firebase-status").innerText = "⚡ Hệ thống: Firebase Online";
+    document.getElementById("firebase-status").style.color = "var(--accent-green)";
+    document.getElementById("firebase-status").style.borderColor = "var(--accent-green)";
+
+    // Lộ trình học 12 tuần không trùng lặp
+    const studyPlan = {
+        1: {
+            math: "Học thuộc 3 Hằng đẳng thức đầu tiên: (A+B)^2, (A-B)^2, A^2-B^2. Làm 10 bài tập khai triển cơ bản.",
+            lit: "Ôn tập tác phẩm 'Tôi đi học' (Thanh Tịnh). Nắm vững cảm xúc bỡ ngỡ của nhân vật 'tôi'.",
+            eng: "Học thuộc Bảng chữ cái tiếng Anh, cách phát âm chuẩn quốc tế IPA. Học vững 7 đại từ nhân xưng cốt lõi."
+        },
+        2: {
+            math: "Học 4 Hằng đẳng thức còn lại (Bậc 3). Làm 10 bài tập rút gọn biểu thức ứng dụng nâng cao.",
+            lit: "Tác phẩm 'Trong lòng mẹ' (Nguyên Hồng). Phân tích tình yêu thương mẹ mãnh liệt của bé Hồng.",
+            eng: "Làm chủ Động từ To-Be (am/is/are) ở Hiện Tại Đơn. Luyện dịch và viết 15 câu thực hành."
+        },
+        3: {
+            math: "Phân tích đa thức thành nhân tử bằng phương pháp đặt nhân tử chung & Vận dụng HĐT linh hoạt.",
+            lit: "Tác phẩm 'Tức nước vỡ bờ' (Ngô Tất Tố). Phân tích sức mạnh phản kháng mạnh mẽ của chị Dậu.",
+            eng: "Thì Hiện Tại Đơn với Động từ thường. Nắm vững quy tắc thêm s/es. Học 20 từ vựng chủ đề School."
+        },
+        4: {
+            math: "Phân tích đa thức thành nhân tử bằng phương pháp nhóm nhiều hạng tử & Tách hạng tử bậc hai nâng cao.",
+            lit: "Tác phẩm 'Lão Hạc' (Nam Cao). Bức chân dung đau đớn nhưng giàu lòng tự trọng của người nông dân.",
+            eng: "Thành thục Từ để hỏi (WH-questions: What, Where, When, Why, Who, How). Thực hành đặt 10 câu hỏi phức."
+        },
+        5: {
+            math: "Đại số 8: Định nghĩa Phân thức đại số. Kỹ năng tìm điều kiện xác định chuẩn xác (Ép mẫu thức khác 0).",
+            lit: "Kỹ năng làm bài văn: Cấu trúc toàn diện của một đoạn văn Nghị luận Xã hội đạt điểm tối đa.",
+            eng: "Thì Hiện Tại Tiếp Diễn (S + am/is/are + V-ing). Phân biệt rạch ròi ngữ cảnh với Hiện tại đơn."
+        },
+        6: {
+            math: "Đại số 8: Rút gọn phân thức đại số biến đổi phức tạp. Áp dụng kỹ năng phân tích nhân tử để triệt tiêu.",
+            lit: "Luyện viết đoạn văn Nghị luận Xã hội sâu sắc về chủ đề 'Lòng kiên trì vượt khó' và 'Sự trung thực'.",
+            eng: "Từ vựng chủ đề Family & Daily Routines. Viết đoạn văn tiếng Anh ngắn 80 từ kể về thói quen của bản thân."
+        },
+        7: {
+            math: "Hình học 8: Ôn tập Định lý Ta-lét trong tam giác (Thuận và Đảo). Giải toán tính độ dài đoạn thẳng hình học.",
+            lit: "Kỹ năng Đọc hiểu văn bản: Nhận diện phương thức biểu đạt chính, các biện pháp tu từ tiêu biểu.",
+            eng: "Thì Quá Khứ Đơn với Động từ To-be (was/were). Luyện tập viết nhật ký ngắn bằng thì quá khứ đơn."
+        },
+        8: {
+            math: "Hình học 8: Tính chất đường phân giác trong và ngoài của tam giác. Làm bài tập ứng dụng lập tỉ lệ đoạn thẳng.",
+            lit: "Khởi động chương trình Ngữ Văn 9: Đọc trước văn bản 'Chuyện người con gái Nam Xương' (Nguyễn Dữ).",
+            eng: "Thì Quá Khứ Đơn với Động từ thường (V-ed). Bắt buộc học thuộc lòng 30 động từ bất quy tắc nhóm thông dụng."
+        },
+        9: {
+            math: "Hình học 8: 3 trường hợp đồng dạng vững chắc của tam giác (c.c.c, c.g.c, g.g). Hệ thức cốt lõi ôn thi lên cấp 3.",
+            lit: "Ngữ Văn 9: Phân tích sâu sắc bi kịch gia đình và vẻ đẹp khuất lấp của nhân vật Vũ Nương.",
+            eng: "Giới từ chỉ thời gian, địa điểm, vị trí (In, On, At). Xử lý trọn vẹn tập bài tập điền giới từ bẫy đề thi."
+        },
+        10: {
+            math: "Chuẩn bị Toán 9: Căn Bậc Hai Đại Số. Nắm vững điều kiện để căn thức có nghĩa (Biểu thức dưới căn >= 0).",
+            lit: "Ngữ Văn 9: Phân tích bài thơ 'Đồng chí' (Chính Hữu). Học thuộc lòng và viết luận điểm cơ sở tình đồng chí.",
+            eng: "Thì Tương Lai Đơn (Will + V nguyên mẫu). Học cách đưa ra dự đoán và lời hứa trong văn phong giao tiếp."
+        },
+        11: {
+            math: "Toán 9: Các phép biến đổi căn thức cơ bản (Đưa thừa số ra ngoài/vào trong dấu căn, trục căn thức mẫu).",
+            lit: "Ngữ Văn 9: Phân tích bài thơ 'Bài thơ về tiểu đội xe không kính' (Phạm Tiến Duật). Vẻ đẹp hiên ngang lính trẻ.",
+            eng: "Cấu trúc Câu so sánh Hơn và so sánh Nhất với tính từ ngắn và tính từ dài. Làm 20 câu trắc nghiệm biến đổi câu."
+        },
+        12: {
+            math: "Toán 9: Hình học Hệ thức lượng trong tam giác vuông. Học và chứng minh 4 hệ thức lượng nền tảng.",
+            lit: "Tổng kết chặng đường: Đọc hiểu văn bản thơ hiện đại lớp 9. Hệ thống hóa toàn bộ luận điểm văn học mùa hè.",
+            eng: "Tổng ôn tập 4 thì cốt lõi nhất (Hiện tại đơn, Tiếp diễn, Quá khứ đơn, Tương lai đơn). Làm đề khảo sát tổng hợp."
+        }
+    };
+
+    const dailyRoutine = {
+        "246": [
+            { id: "m1", time: "06:30", type: "workout", title: "Thức dậy & Cardio tăng cao chiều cao, cơ ngực", 
+              desc: "Bật dậy ngay đúng 6h30 không trì hoãn. Uống 200ml nước lọc ấm. <br><b>Bài tập:</b> Nhảy dây 500 cái. Hít đất chuẩn form 4 hiệp x 12 cái. Đu xà thả lỏng cột sống 3 phút. <br>Vệ sinh cá nhân, skincare sáng, ăn sáng đầy đủ dưỡng chất." },
+            { id: "m2", time: "08:30", type: "study", title: "Toán Học: Nâng cấp tư duy logic", subject: "math", desc: "DYNAMIC_MATH" },
+            { id: "m3", time: "11:30", type: "life", title: "Ăn trưa dinh dưỡng & Ngủ trưa phục hồi", 
+              desc: "Ăn trưa giàu đạm (thịt, cá, trứng), nhiều rau xanh. <b>Bắt buộc:</b> Đưa thuốc đúng giờ nhắc bà uống cơm trưa. Ngủ trưa sâu phục hồi đúng 30 phút (12h00 - 12h30)." },
+            { id: "m4", time: "14:00", type: "study", title: "Ngữ Văn: Cảm thụ & Viết đoạn nghị luận", subject: "lit", desc: "DYNAMIC_LIT" },
+            { id: "m5", time: "17:00", type: "workout", title: "Thể chất chiều: Chạy bộ rèn cơ đùi", 
+              desc: "Chạy bộ cự ly trung bình hoặc đá bóng ngoài trời. Đón ánh nắng muộn giúp tổng hợp tốt Vitamin D chắc xương." },
+            { id: "m6", time: "20:00", type: "life", title: "Cơm tối & Đọc sách xã hội", 
+              desc: "Ăn tối cùng gia đình. Hỗ trợ dọn dẹp, rửa bát giúp bố mẹ. Tuyệt đối không chạm vào code game." },
+            { id: "m7", time: "23:00", type: "life", title: "Skincare tối - Đi ngủ sâu đúng giấc", 
+              desc: "Rửa mặt sạch bằng sữa rửa mặt Cerave/Cetaphil. Lên giường ngủ thẳng lưng trước 23h00 để tối ưu hóa hormone HGH tăng chiều cao tự nhiên." }
+        ],
+        "357": [
+            { id: "t1", time: "06:30", type: "workout", title: "Thức dậy & Điêu khắc múi bụng", 
+              desc: "Thức dậy đúng 6h30. <br><b>Bài tập cơ bụng:</b> Gập bụng (Crunch) 4 hiệp x 20 cái. Plank cứng core 3 hiệp x 60 giây. Đá chân nâng cơ bụng dưới (Leg raise) 3 hiệp x 15 cái. Kéo giãn yoga rắn hổ mang." },
+            { id: "t2", time: "08:30", type: "study", title: "Tiếng Anh: Ngữ pháp nền tảng chuyên sâu", subject: "eng", desc: "DYNAMIC_ENG" },
+            { id: "t3", time: "11:30", type: "life", title: "Ăn trưa & Giờ nghỉ ngơi điều độ", 
+              desc: "Nạp năng lượng phục hồi hệ cơ. Nhắc nhở bà uống thuốc điều trị chu đáo." },
+            { id: "t4", time: "14:00", type: "study", title: "Tiếng Anh: Mở rộng vốn từ vựng", subject: "eng", 
+              desc: "Chép phạt thủ công các từ vựng mới học trong tuần. Viết đi viết lại ra giấy nháp mỗi từ 5 dòng, đọc to phát âm chuẩn." },
+            { id: "t5", time: "17:00", type: "workout", title: "Cơ đùi & Thần kinh tăng trưởng", 
+              desc: "Squat gánh tạ giả định hoặc squat không tạ đúng form 4 hiệp x 20 cái. Bài tập kích thích hormone testostero.n nội sinh tăng trưởng toàn diện cơ bắp tay và vai." },
+            { id: "t6", time: "20:00", type: "life", title: "Thư giãn lành mạnh & Phụ giúp gia đình", 
+              desc: "Lau dọn phòng học, chuẩn bị trước sách vở cho ngày hôm sau." },
+            { id: "t7", time: "23:00", type: "life", title: "Giới nghiêm - Đóng máy ngủ ngon", 
+              desc: "Tắt toàn bộ thiết bị điện tử trước 15 phút khi ngủ. Rửa mặt sạch sẽ." }
+        ],
+        "CN": [
+            { id: "c1", time: "07:00", type: "life", title: "Thư giãn cuối tuần nhẹ nhàng", desc: "Được phép ngủ thêm đến 7h00 sáng. Dậy uống nước lọc thanh lọc cơ thể." },
+            { id: "c2", time: "09:00", type: "study", title: "Hội đồng tự kiểm tra tổng hợp kiến thức", subject: "all", 
+              desc: "Rà soát lại toàn bộ lỗ hổng kiến thức 3 môn đã tích lũy trong tuần. Giải quyết dứt điểm các bài toán còn nợ." },
+            { id: "c3", time: "15:00", type: "workout", title: "Bơi lội giải phóng toàn bộ khớp xương", desc: "Khuyến khích đi bơi 45-60 phút giúp sải rộng bả vai, kéo giãn cơ xương tối đa thúc đẩy tăng chiều cao vượt bậc." },
+            { id: "c4", time: "23:00", type: "life", title: "Ngủ đúng giờ giữ vững nhịp sinh học", desc: "Lên giường đúng 23h00, đảm bảo tuần mới tràn đầy năng lượng." }
+        ]
+    };
+
+    // NGÂN HÀNG CÂU HỎI AI MỞ RỘNG (15 câu mỗi môn - phủ khắp 12 tuần)
+    const aiBank = {
+        math: [
+            { q: "Khai triển biểu thức HĐT: (x+y)² bằng bao nhiêu?", a: "x^2+2xy+y^2", hint: "A bình cộng 2AB cộng B bình" },
+            { q: "Khai triển biểu thức HĐT phân tích: x² - 16 bằng gì?", a: "(x-4)(x+4)", hint: "Dạng hằng đẳng thức hiệu hai bình phương (A-B)(A+B)" },
+            { q: "Khai triển biểu thức HĐT: (x-y)³ bằng gì?", a: "x^3-3x^2y+3xy^2-y^3", hint: "Hằng đẳng thức bậc 3 lập phương của một hiệu" },
+            { q: "Phân tích đa thức thành nhân tử: x² - x bằng gì?", a: "x(x-1)", hint: "Đặt nhân tử chung x ra ngoài" },
+            { q: "Điều kiện xác định của phân thức đại số P(x) = A(x)/B(x) là gì?", a: "b khác 0", hint: "Mẫu số của phân thức phải như thế nào?" },
+            { q: "Định lý Ta-lét trong tam giác phát biểu về tỉ số các đoạn thẳng tạo bởi đường thẳng như thế nào với 1 cạnh?", a: "song song", hint: "Đường thẳng d cắt hai cạnh và ... với cạnh còn lại" },
+            { q: "Trường hợp đồng dạng thứ ba của hai tam giác là gì (viết tắt)?", a: "g.g", hint: "Khi hai tam giác có hai góc tương ứng bằng nhau" },
+            { q: "Giá trị của biểu thức căn bậc hai số học √81 là bao nhiêu?", a: "9", hint: "Mấy bình phương bằng 81?" },
+            { q: "Điều kiện để căn thức bậc hai √A có nghĩa (xác định) là gì?", a: "a >= 0", hint: "Biểu thức dưới dấu căn phải luôn không âm" },
+            { q: "Trong tam giác vuông, bình phương cạnh góc vuông bằng tích của cạnh huyền và cái gì của nó trên cạnh huyền?", a: "hình chiếu", hint: "b^2 = a * b' (b' là cái gì?)" },
+            { q: "Trục căn thức ở mẫu của biểu thức 1/√2 ta được kết quả gì?", a: "sqrt(2)/2", hint: "Nhân cả tử và mẫu với √2 (viết dạng rút gọn)" },
+            { q: "Khai triển HĐT tổng hai lập phương: x³ + y³ bằng gì?", a: "(x+y)(x^2-xy+y^2)", hint: "Tích của tổng hai biểu thức và bình phương thiếu của hiệu" }
+        ],
+        lit: [
+            { q: "Tác giả của truyện ngắn giàu chất thơ 'Tôi đi học' là ai?", a: "thanh tịnh", hint: "Nhà văn quê ở Thừa Thiên Huế, tên gồm 2 từ bắt đầu bằng chữ T" },
+            { q: "Đoạn trích 'Trong lòng mẹ' thuộc tập hồi ký nào của nhà văn Nguyên Hồng?", a: "những ngày thơ ấu", hint: "Tác phẩm xuất bản năm 1938 kể về tuổi thơ cay đắng của chính nhà văn" },
+            { q: "Đoạn trích 'Tức nước vỡ bờ' của Ngô Tất Tố trích từ thiên tiểu thuyết xuất sắc nào?", a: "tắt đèn", hint: "Bức tranh chân thực về nông thôn Việt Nam trước cách mạng" },
+            { q: "Ai là nhân vật trung tâm đại diện cho sức mạnh phản kháng của người nông dân trong 'Tức nước vỡ bờ'?", a: "chị dậu", hint: "Người đàn bà lực điền dám quật ngã hai tên cai lệ" },
+            { q: "Lão Hạc trong truyện ngắn cùng tên của Nam Cao đã chọn cái chết đau đớn bằng thứ gì?", a: "bả chó", hint: "Một cái chết tự trọng để giữ lại mảnh vườn cho con trai" },
+            { q: "Tác giả của tác phẩm nổi tiếng chữ Nôm 'Chuyện người con gái Nam Xương' là ai?", a: "nguyễn dữ", hint: "Học trò của Tuyết Giang Phu Tử Nguyễn Bỉnh Khiêm, sống ở thế kỷ XVI" },
+            { q: "Nguyên nhân trực tiếp dẫn đến cái chết bi kịch oan uổng của nàng Vũ Nương là gì?", a: "sự ghen tuông", hint: "Tính cách đa nghi, cả ghen của người chồng Trương Sinh" },
+            { q: "Bài thơ mang tính định nghĩa xuất sắc về tình đồng chí của người lính thời kháng Pháp tên là gì?", a: "đồng chí", hint: "Tác phẩm tiêu biểu của nhà thơ Chính Hữu sáng tác năm 1948" },
+            { q: "Hình ảnh biểu tượng tuyệt đẹp kết thúc bài thơ 'Đồng chí' của Chính Hữu là gì?", a: "đầu súng trăng treo", hint: "Sự hòa quyện giữa chất chiến sĩ và tâm hồn thi sĩ" },
+            { q: "Tác giả của tác phẩm 'Bài thơ về tiểu đội xe không kính' là ai?", a: "phạm tiến duật", hint: "Cánh chim đầu đàn của thế hệ nhà thơ trẻ thời kỳ chống Mỹ" },
+            { q: "Một đoạn văn nghị luận xã hội chuẩn mực thường cấu trúc thành mấy phần cấu thành?", a: "3", hint: "Mở đoạn - Thân đoạn - Kết đoạn tương đương con số mấy?" },
+            { q: "Yếu tố cốt lõi mang tính chất xương sống quyết định sức thuyết phục của văn nghị luận là gì?", a: "luận điểm", hint: "Ý kiến thể hiện tư tưởng, quan điểm của người viết trong bài văn" }
+        ],
+        eng: [
+            { q: "Ngôi đại từ số ít 'She' đi với động từ to-be nào ở thì hiện tại đơn?", a: "is", hint: "Lựa chọn giữa: am, is, are" },
+            { q: "Thì Hiện tại tiếp diễn (Present Continuous) bắt buộc động từ chính phải thêm đuôi gì?", a: "ing", hint: "Hậu tố gồm 3 chữ cái đại diện cho hành động đang diễn ra" },
+            { q: "Dạng quá khứ phân từ cột 2 (Past Simple) của động từ bất quy tắc 'go' là gì?", a: "went", hint: "Từ bắt đầu bằng chữ W, thay thế hoàn toàn cấu trúc của 'go'" },
+            { q: "Từ để hỏi (WH-question) nào chuyên dùng để truy vấn về lý do, nguyên nhân?", a: "why", hint: "Từ tiếng Anh nghĩa là 'Tại sao'" },
+            { q: "Thêm hậu tố so sánh hơn cho tính từ ngắn 'short' ta được từ nào?", a: "shorter", hint: "Thêm đuôi 'er' vào sau tính từ" },
+            { q: "Dạng so sánh nhất (Superlative) của tính từ đặc biệt 'good' là gì?", a: "best", hint: "The + ... (Tốt nhất)" },
+            { q: "Trước các tháng trong năm hoặc trước các năm (Ví dụ: ... June, ... 2026), ta dùng giới từ gì?", a: "in", hint: "Giới từ gồm 2 chữ cái chỉ khoảng thời gian lớn bao quát" },
+            { q: "Trước các thứ trong tuần (Ví dụ: ... Monday), ta bắt buộc dùng giới từ gì?", a: "on", hint: "Giới từ gồm 2 chữ cái chỉ ngày cụ thể trong tuần" },
+            { q: "Thì tương lai đơn diễn tả ý định nhất thời dùng trợ động từ cốt lõi nào?", a: "will", hint: "Từ gồm 4 chữ cái đứng trước động từ nguyên mẫu" },
+            { q: "Danh từ số nhiều bất quy tắc của từ đứa trẻ 'child' là gì?", a: "children", hint: "Từ bắt đầu bằng chi, kết thúc bằng ren" },
+            { q: "Từ vựng: 'Trường trung học cơ sở' trong tiếng Anh viết là gì?", a: "middle school", hint: "Cấp học hiện tại của em tại trường Nam Hồng" },
+            { q: "Trợ động từ phủ định dùng cho ngôi số ít (He, She, It) ở thì hiện tại đơn là gì?", a: "does not", hint: "Viết đầy đủ không viết tắt của dạng phủ định động từ thường" }
+        ],
+        all: [
+            { q: "Em đã hoàn thành việc rà soát kiến thức và thực hành thể chất nghiêm túc chưa?", a: "rồi", hint: "Nhập 'rồi' để hệ thống phê duyệt tiến trình" }
+        ]
+    };
+
+    // Quản lý trạng thái ứng dụng (State System)
+    let currentWeek = 1;
+    let currentDayGroup = "246";
+    let pendingTask = null;
+    let currentAiAnswer = "";
+    let penaltyCount = 0;
+    
+    // Hệ thống chống trùng lặp câu hỏi trong cùng một phiên (Session Memory)
+    let askedHistory = { math: [], lit: [], eng: [], all: [] };
+
+    // Khởi tạo trình chọn tuần cao cấp
+    function renderWeekSelector() {
+        const container = document.getElementById("week-selector");
+        container.innerHTML = "";
+        for(let i = 1; i <= 12; i++){
+            let btn = document.createElement("button");
+            btn.className = `week-btn ${i === currentWeek ? 'active' : ''}`;
+            btn.innerText = `Tuần ${i}`;
+            btn.onclick = () => {
+                currentWeek = i;
+                renderWeekSelector();
+                renderTimeline();
+            };
+            container.appendChild(btn);
+        }
+    }
+
+    function getTodayKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    }
+
+    // Sửa lỗi kỹ thuật số 1: switchDay nhận tham số btnElement tường minh loại bỏ hoàn toàn biến event lỗi toàn cục
+    window.switchDay = function(btnElement, dayGroup) {
+        currentDayGroup = dayGroup;
+        document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        renderTimeline();
+    };
+
+    // Render Timeline danh sách Task
+    function renderTimeline() {
+        const container = document.getElementById("timeline-container");
+        container.innerHTML = "";
+        
+        let dayName = currentDayGroup === "246" ? "Thứ 2-4-6" : (currentDayGroup === "357" ? "Thứ 3-5-7" : "Chủ Nhật");
+        document.getElementById("timeline-title").innerText = `Lịch trình Tuần ${currentWeek} - ${dayName}`;
+
+        const tasks = dailyRoutine[currentDayGroup];
+        const weekData = studyPlan[currentWeek] || studyPlan[1];
+        const dateKey = getTodayKey();
+
+        tasks.forEach(task => {
+            let taskDesc = task.desc;
+            if(taskDesc === "DYNAMIC_MATH") taskDesc = `<b>Trọng tâm học tập Đại số & Hình học Tuần ${currentWeek}:</b> ${weekData.math}`;
+            if(taskDesc === "DYNAMIC_LIT") taskDesc = `<b>Trọng tâm Đọc hiểu & Viết văn Tuần ${currentWeek}:</b> ${weekData.lit}`;
+            if(taskDesc === "DYNAMIC_ENG") taskDesc = `<b>Trọng tâm Ngữ pháp & Từ vựng Tuần ${currentWeek}:</b> ${weekData.eng}`;
+
+            let tagClass = task.type === 'workout' ? 'tag-workout' : task.type === 'study' ? 'tag-study' : 'tag-life';
+            let tagText = task.type === 'workout' ? '💪 THỂ CHẤT' : task.type === 'study' ? '📚 HỌC TẬP' : '🔄 THÓI QUEN';
+
+            const item = document.createElement('div');
+            item.className = 'task-item';
+            item.id = `item-${task.id}`;
+            item.innerHTML = `
+                <div class="task-time">
+                    ${task.time}
+                    <div class="guide-tag ${tagClass}" style="margin-top:6px; text-align:center;">${tagText}</div>
+                </div>
+                <div class="task-content">
+                    <div class="task-header-row">
+                        <span class="task-title-text">${task.title}</span>
+                    </div>
+                    <div class="task-desc">${taskDesc}</div>
+                </div>
+                <div class="task-action">
+                    <input type="checkbox" class="custom-checkbox" id="chk-${task.id}" 
+                        onchange="handleCheck(this, '${task.id}', '${task.type}', '${task.subject || ''}')">
+                </div>
+            `;
+            container.appendChild(item);
+
+            // Đồng bộ trạng thái từ Firebase Realtime Database bảo mật
+            const fbPath = `summer_12w_2026/W${currentWeek}/${dateKey}/${task.id}`;
+            get(ref(db, fbPath)).then(snap => {
+                if (snap.exists() && snap.val() === true) {
+                    document.getElementById(`chk-${task.id}`).checked = true;
+                    document.getElementById(`item-${task.id}`).classList.add('completed');
+                }
+            }).catch(err => console.log("Firebase Read Error:", err));
+        });
+        checkActiveTime();
+    }
+
+    // Định vị Task thời gian thực chính xác
+    function checkActiveTime() {
+        const now = new Date();
+        const currMins = now.getHours() * 60 + now.getMinutes();
+        const tasks = dailyRoutine[currentDayGroup];
+        let activeId = null;
+
+        for(let i = 0; i < tasks.length; i++) {
+            let parts = tasks[i].time.split(':');
+            let taskMins = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            if (currMins >= taskMins) {
+                activeId = tasks[i].id;
+            }
+        }
+
+        document.querySelectorAll('.task-item').forEach(el => el.classList.remove('active-now'));
+        if (activeId && document.getElementById(`item-${activeId}`)) {
+            document.getElementById(`item-${activeId}`).classList.add('active-now');
+        }
+    }
+
+    // Xử lý Checkbox thông minh
+    window.handleCheck = function(cb, taskId, type, subject) {
+        const itemDiv = document.getElementById(`item-${taskId}`);
+        const fbPath = `summer_12w_2026/W${currentWeek}/${getTodayKey()}/${taskId}`;
+
+        if (!cb.checked) {
+            itemDiv.classList.remove('completed');
+            set(ref(db, fbPath), false);
+            return;
+        }
+
+        if (type === 'study') {
+            // Tạm thời bỏ check trực tiếp để chờ AI phê duyệt kiến thức bài tập
+            cb.checked = false;
+            pendingTask = { id: taskId, cb: cb, div: itemDiv, path: fbPath, originalState: false };
+            openAiModal(subject);
+        } else {
+            itemDiv.classList.add('completed');
+            set(ref(db, fbPath), true);
+        }
+    };
+
+    // Thuật toán bốc câu hỏi AI nâng cao - Chống trùng lặp tuyệt đối
+    function openAiModal(subject) {
+        const modal = document.getElementById('ai-modal');
+        let category = subject || 'all';
+        let questions = aiBank[category] || aiBank['all'];
+
+        // Lọc các câu hỏi chưa được hỏi trong phiên này
+        let availableQuestions = questions.filter(q => !askedHistory[category].includes(q.q));
+
+        // Nếu đã hỏi hết ngân hàng câu hỏi, tự động reset bộ nhớ để bắt đầu vòng lặp mới
+        if (availableQuestions.length === 0) {
+            askedHistory[category] = [];
+            availableQuestions = questions;
+        }
+
+        // Bốc ngẫu nhiên câu hỏi hợp lệ
+        const selectedQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+        
+        // Lưu lịch sử câu đã hỏi
+        askedHistory[category].push(selectedQuestion.q);
+        
+        currentAiAnswer = selectedQuestion.a.toLowerCase().trim();
+        
+        document.getElementById('ai-q-text').innerText = selectedQuestion.q;
+        document.getElementById('ai-q-hint').innerText = `Gợi ý tư duy: ${selectedQuestion.hint}`;
+        document.getElementById('ai-input').value = "";
+        document.getElementById('ai-feedback').innerText = "";
+        
+        modal.style.display = 'flex';
+        document.getElementById('ai-input').focus();
+    }
+
+    // Sửa lỗi số 2 & số 4: Thêm hàm đóng modal an toàn, hoàn trả trạng thái checkbox gốc đồng bộ hệ thống
+    window.closeAiModal = function() {
+        document.getElementById('ai-modal').style.display = 'none';
+        if (pendingTask) {
+            pendingTask.cb.checked = pendingTask.originalState;
+            if(!pendingTask.originalState) {
+                pendingTask.div.classList.remove('completed');
+            }
+            pendingTask = null;
+        }
+    };
+
+    // Xác thực đáp án đầu ra
+    window.verifyAnswer = function() {
+        const userAns = document.getElementById('ai-input').value.trim().toLowerCase();
+        const feedback = document.getElementById('ai-feedback');
+
+        if (userAns === currentAiAnswer) {
+            feedback.style.color = "var(--accent-green)";
+            feedback.innerText = "✓ CHÍNH XÁC HOÀN TOÀN! Tiến độ đã đồng bộ lên Cloud.";
+            
+            if (pendingTask) {
+                pendingTask.cb.checked = true;
+                pendingTask.div.classList.add('completed');
+                set(ref(db, pendingTask.path), true);
+            }
+            
+            penaltyCount = 0; 
+            document.getElementById('penalty-count').innerText = `Mắc lỗi: ${penaltyCount}/3`;
+
+            setTimeout(() => { 
+                document.getElementById('ai-modal').style.display = 'none'; 
+                pendingTask = null;
+            }, 1200);
+        } else {
+            penaltyCount++;
+            document.getElementById('penalty-count').innerText = `Mắc lỗi: ${penaltyCount}/3`;
+            feedback.style.color = "var(--accent-red)";
+            feedback.innerText = "❌ ĐÁP ÁN CHƯA ĐÚNG! Hãy tập trung tư duy suy nghĩ kỹ lại.";
+            
+            if (penaltyCount >= 3) {
+                setTimeout(() => {
+                    document.getElementById('ai-modal').style.display = 'none';
+                    document.getElementById('penalty-screen').style.display = 'flex';
+                }, 400);
+            }
+        }
+    }
+
+    // Sửa lỗi số 3: Kiểm tra điều kiện null an toàn cho biến pendingTask khi xử lý mở khóa kỷ luật
+    window.unlockSystem = function() {
+        penaltyCount = 0;
+        document.getElementById('penalty-count').innerText = `Mắc lỗi: ${penaltyCount}/3`;
+        document.getElementById('penalty-screen').style.display = 'none';
+        
+        if (pendingTask && pendingTask.id) {
+            let recoveredSubject = pendingTask.id.includes('m') ? 'math' : (pendingTask.id.includes('t') ? 'eng' : 'lit');
+            openAiModal(recoveredSubject); 
+        } else {
+            openAiModal('all');
+        }
+    }
+
+    // Lắng nghe phím Enter tối ưu trải nghiệm người dùng
+    document.getElementById('ai-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') verifyAnswer();
+    });
+
+    // Đồng hồ kỹ thuật số chính xác đến từng giây
+    function updateClock() {
+        const now = new Date();
+        let h = now.getHours().toString().padStart(2, '0');
+        let m = now.getMinutes().toString().padStart(2, '0');
+        let s = now.getSeconds().toString().padStart(2, '0');
+        document.getElementById('digital-clock').innerText = `${h}:${m}:${s}`;
+        
+        let d = now.getDate().toString().padStart(2, '0');
+        let mo = (now.getMonth()+1).toString().padStart(2, '0');
+        document.getElementById('current-date').innerText = `NGÀY ${d} THÁNG ${mo} NĂM 2026`;
+    }
+    
+    // Tách biệt luồng Interval (Sửa lỗi số 6): Đồng hồ chạy mỗi giây, Định vị Task chạy độc lập mỗi 60 giây chống lãng phí CPU
+    setInterval(updateClock, 1000);
+    setInterval(checkActiveTime, 60000);
+    
+    // Chạy khởi động ngay lập tức khi load trang thành công
+    updateClock();
+    renderWeekSelector();
+    renderTimeline();
+
+</script>
+</body>
+</html>
